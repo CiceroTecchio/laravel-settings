@@ -216,11 +216,20 @@ class DatabaseSettingStore extends SettingStore
 				$dbData[] = array($this->keyColumn => $key, $this->valueColumn => $value);
 			}
 		}
-		if(auth()->check() && isset(auth()->user()->central_id)){
-			$dbData[] =  array('central_id' => auth()->user()->central_id);
+		if (auth()->check() && isset(auth()->user()->central_id)) {
+			$centralId = auth()->user()->central_id;
+		} else if (centraisAtivas()->count() > 0) {
+			$centralId = centraisAtivas()->first()->id;
+		}
+		$newData = array();
+		foreach ($dbData as $key => $dbDataV) {
+			$dbData[$key] = array_merge(
+				array('central_id' => $centralId),
+				$dbDataV
+			);
 		}
 
-		return $dbData;
+		return $newData;
 	}
 
 	/**
