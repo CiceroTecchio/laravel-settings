@@ -216,6 +216,9 @@ class DatabaseSettingStore extends SettingStore
 				$dbData[] = array($this->keyColumn => $key, $this->valueColumn => $value);
 			}
 		}
+		if(auth()->check() && isset(auth()->user()->central_id)){
+			$dbData = array_merge($dbData, array('central_id' => auth()->user()->central_id));
+		}
 
 		return $dbData;
 	}
@@ -264,9 +267,16 @@ class DatabaseSettingStore extends SettingStore
 	 *
 	 * @return \Illuminate\Database\Query\Builder
 	 */
-	protected function newQuery($insert = false)
+	protected function newQuery($insert = false, $centralId = null)
 	{
 		$query = $this->connection->table($this->table);
+               
+                if (isset($centralId){
+                        $query->where('central_id', $centralId);
+		} else if(auth()->check() && isset(auth()->user()->central_id)){
+			$query->where('central_id',auth()->user()->central_id);
+		}
+
 
 		if (!$insert) {
 			foreach ($this->extraColumns as $key => $value) {
