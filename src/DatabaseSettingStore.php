@@ -271,7 +271,7 @@ class DatabaseSettingStore extends SettingStore
 	{
 		$query = $this->connection->table($this->table);
                
-                if (isset($centralId){
+                if (isset($centralId)){
                         $query->where('central_id', $centralId);
 		} else if(auth()->check() && isset(auth()->user()->central_id)){
 			$query->where('central_id',auth()->user()->central_id);
