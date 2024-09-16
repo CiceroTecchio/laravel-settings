@@ -223,7 +223,7 @@ class DatabaseSettingStore extends SettingStore
 		}
 		$newData = array();
 		foreach ($dbData as $key => $dbDataV) {
-			$dbData[$key] = array_merge(
+			$newData[] = array_merge(
 				array('central_id' => $centralId),
 				$dbDataV
 			);
