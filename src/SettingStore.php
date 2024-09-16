@@ -77,6 +77,9 @@ abstract class SettingStore
 	 */
 	protected $cacheForgetOnWrite = true;
 
+
+	public $centralId = null;
+
 	/**
 	 * Set default values.
 	 *
@@ -120,7 +123,7 @@ abstract class SettingStore
 			$default = array_merge(ArrayUtil::get($this->defaults, $key, []), $default);
 		}
         
-		$this->load();
+		$this->load($centralId);
 
 		return ArrayUtil::get($this->data, $key, $default);
 	}
