@@ -5,10 +5,14 @@ if (! function_exists('setting')) {
     {
         $setting = app('setting');
 
+        if (isset($centralId)){
+            $setting->centralId = $centralId;
+        }
+
         if (is_array($key)) {
             $setting->set($key);
         } elseif (! is_null($key)) {
-            return $setting->get($key, $default, $centralId);
+            return $setting->get($key, $default);
         }
 
         return $setting;
