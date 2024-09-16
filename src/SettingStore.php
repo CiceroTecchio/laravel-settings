@@ -123,7 +123,7 @@ abstract class SettingStore
 			$default = array_merge(ArrayUtil::get($this->defaults, $key, []), $default);
 		}
         
-		$this->load($centralId);
+		$this->load();
 
 		return ArrayUtil::get($this->data, $key, $default);
 	}
@@ -248,11 +248,11 @@ abstract class SettingStore
 	{
 		if ($this->cache) {
 			return $this->cache->remember(static::CACHE_KEY, $this->cacheTtl, function () {
-				return $this->read();
+				return $this->read($this->centralId);
 			});
 		}
 
-		return $this->read();
+		return $this->read($this->centralId);
 	}
 
 	/**
