@@ -217,7 +217,7 @@ class DatabaseSettingStore extends SettingStore
 			}
 		}
 		if(auth()->check() && isset(auth()->user()->central_id)){
-			$dbData = array_merge($dbData, array('central_id' => auth()->user()->central_id));
+			$dbData[] =  array('central_id' => auth()->user()->central_id);
 		}
 
 		return $dbData;
