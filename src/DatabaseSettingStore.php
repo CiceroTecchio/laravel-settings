@@ -235,9 +235,9 @@ class DatabaseSettingStore extends SettingStore
 	/**
 	 * {@inheritdoc}
 	 */
-	protected function read()
+	protected function read($centralId = null)
 	{
-		return $this->parseReadData($this->newQuery()->get());
+		return $this->parseReadData($this->newQuery(false, $centralId)->get());
 	}
 
 	/**
