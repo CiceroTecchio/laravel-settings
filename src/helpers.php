@@ -7,6 +7,7 @@ if (! function_exists('setting')) {
 
         if (isset($centralId)){
             $setting->centralId = $centralId;
+            $setting->load(true);
         }
 
         if (is_array($key)) {
