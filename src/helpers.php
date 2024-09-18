@@ -7,7 +7,11 @@ if (! function_exists('setting')) {
     
         if (isset($centralId) && $centralId != $setting->centralId) {
             $setting->centralId = $centralId;
-            $setting->load(true);
+            try {
+                $setting->load(true);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
         }
     
         if (is_array($key)) {
