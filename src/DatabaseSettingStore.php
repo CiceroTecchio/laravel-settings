@@ -279,11 +279,20 @@ class DatabaseSettingStore extends SettingStore
 	protected function newQuery($insert = false, $centralId = null)
 	{
 		$query = $this->connection->table($this->table);
-               
-                if (isset($centralId)){
-                        $query->where('central_id', $centralId);
-		} else if(auth()->check() && isset(auth()->user()->central_id)){
-			$query->where('central_id',auth()->user()->central_id);
+
+		if (isset($centralId)) {
+			$query->where('central_id', $centralId);
+		} else if (auth()->check() && isset(auth()->user()->central_id)) {
+			$query->where('central_id', auth()->user()->central_id);
+		} else {
+			try {
+				$centrais = centraisAtivas();
+				if ($centrais->count() > 0) {
+					$query->where('central_id', $centrais->first()->id);
+				}
+			} catch (\Throwable $th) {
+				//throw $th;
+			}
 		}
 
 
