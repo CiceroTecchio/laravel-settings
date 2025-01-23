@@ -309,4 +309,11 @@ class DatabaseSettingStore extends SettingStore
 
 		return $query;
 	}
+
+	function setConnection(Connection $connection)
+	{
+		$this->connection = $connection;
+		$this->setCache(null);
+		$this->load(true);
+	}
 }
