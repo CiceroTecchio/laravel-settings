@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Laravel 4 - Persistent Settings
  * 
@@ -165,14 +166,26 @@ class DatabaseSettingStore extends SettingStore
 		$deleteKeys = array();
 
 		foreach ($keys as $key) {
-            if (isset($updatedData[$key]) && isset($persistedData[$key]) && (string)$updatedData[$key] !== (string)$persistedData[$key]) {
+			if (isset($updatedData[$key]) && isset($persistedData[$key]) && (string)$updatedData[$key] !== (string)$persistedData[$key]) {
 				$updateData[$key] = $updatedData[$key];
-            } elseif (!isset($insertData[$key])) {
+			} elseif (!isset($insertData[$key])) {
 				$deleteKeys[] = $key;
 			}
 			unset($insertData[$key]);
 		}
 
+		try {
+			\Log::info(
+				'write setting',
+				[
+					'updateData' => $updateData,
+					'insertData' => $insertData,
+					'deletKeys' => $deleteKeys
+				]
+			);
+		} catch (\Throwable $th) {
+			//throw $th;
+		}
 		foreach ($updateData as $key => $value) {
 			$this->newQuery()
 				->where($this->keyColumn, '=', strval($key))
@@ -259,7 +272,7 @@ class DatabaseSettingStore extends SettingStore
 				$key = $row->{$this->keyColumn};
 				$value = $row->{$this->valueColumn};
 			} else {
-				$msg = 'Expected array or object, got '.gettype($row);
+				$msg = 'Expected array or object, got ' . gettype($row);
 				throw new \UnexpectedValueException($msg);
 			}
 
@@ -305,6 +318,16 @@ class DatabaseSettingStore extends SettingStore
 		if ($this->queryConstraint !== null) {
 			$callback = $this->queryConstraint;
 			$callback($query, $insert);
+		}
+		if ($insert) {
+			try {
+				\Log::info('query', [
+					'sql' => $query->toSql(),
+					'bindings' => $query->getBindings(),
+				]);
+			} catch (\Throwable $th) {
+				//throw $th;
+			}
 		}
 
 		return $query;
