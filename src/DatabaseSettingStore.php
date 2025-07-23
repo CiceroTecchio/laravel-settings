@@ -178,6 +178,7 @@ class DatabaseSettingStore extends SettingStore
 			\Log::info(
 				'write setting',
 				[
+					'originalData' => $data,
 					'updateData' => $updateData,
 					'insertData' => $insertData,
 					'deletKeys' => $deleteKeys
