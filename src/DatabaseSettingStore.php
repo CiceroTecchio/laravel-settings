@@ -174,19 +174,6 @@ class DatabaseSettingStore extends SettingStore
 			unset($insertData[$key]);
 		}
 
-		try {
-			\Log::info(
-				'write setting',
-				[
-					'originalData' => $data,
-					'updateData' => $updateData,
-					'insertData' => $insertData,
-					'deletKeys' => $deleteKeys
-				]
-			);
-		} catch (\Throwable $th) {
-			//throw $th;
-		}
 		foreach ($updateData as $key => $value) {
 			$this->newQuery()
 				->where($this->keyColumn, '=', strval($key))
@@ -319,16 +306,6 @@ class DatabaseSettingStore extends SettingStore
 		if ($this->queryConstraint !== null) {
 			$callback = $this->queryConstraint;
 			$callback($query, $insert);
-		}
-		if ($insert) {
-			try {
-				\Log::info('query', [
-					'sql' => $query->toSql(),
-					'bindings' => $query->getBindings(),
-				]);
-			} catch (\Throwable $th) {
-				//throw $th;
-			}
 		}
 
 		return $query;
