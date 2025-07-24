@@ -12,6 +12,13 @@ if (! function_exists('setting')) {
             } catch (\Throwable $th) {
                 //throw $th;
             }
+        } else if (!isset($centralId) && auth()->check() && isset(auth()->user()->central_id) && auth()->user()->central_id != $setting->centralId) {
+            $setting->centralId = auth()->user()->central_id;
+            try {
+                $setting->load(true);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
         }
     
         if (is_array($key)) {
