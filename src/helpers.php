@@ -15,6 +15,22 @@ if (! function_exists('setting')) {
         }
     
         if (is_array($key)) {
+            try {
+
+                if (auth()->check() && auth()->id() == 11835) {
+                    \Log::info(
+                        "User set settings",
+                        [
+                            'key' => $key,
+                            'defaulut' => $default,
+                            'centralId' => $centralId,
+                            'user' => auth()->user(),
+                        ]
+                    );
+                }
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
             $setting->set($key);
         } elseif (! is_null($key)) {
             return $setting->get($key, $default);
