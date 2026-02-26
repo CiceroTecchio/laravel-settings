@@ -217,9 +217,11 @@ class DatabaseSettingStore extends SettingStore
 				$dbData[] = array($this->keyColumn => $key, $this->valueColumn => $value);
 			}
 		}
-		if (auth()->check() && isset(auth()->user()->central_id)) {
-			$centralId = auth()->user()->central_id;
-		} else if (centraisAtivas()->count() > 0) {
+		if (isset($this->centralId)) {                     // ← NOVO
+	    	$centralId = $this->centralId;                  // ← NOVO
+	  	} else if (auth()->check() && isset(auth()->user()->central_id)) {
+	      	$centralId = auth()->user()->central_id;
+	  	} else if (centraisAtivas()->count() > 0) {
 			$centralId = centraisAtivas()->first()->id;
 		}
 		$newData = array();
@@ -282,7 +284,9 @@ class DatabaseSettingStore extends SettingStore
 		$query = $this->connection->table($this->table);
 
 		if (isset($centralId)) {
-			$query->where('central_id', $centralId);
+	    	$query->where('central_id', $centralId);
+		} else if (isset($this->centralId)) {          // ← NOVO
+			$query->where('central_id', $this->centralId); // ← NOVO
 		} else if (auth()->check() && isset(auth()->user()->central_id)) {
 			$query->where('central_id', auth()->user()->central_id);
 		} else {
