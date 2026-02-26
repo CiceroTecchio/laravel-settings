@@ -4,7 +4,10 @@ if (! function_exists('setting')) {
     function setting($key = null, $default = null, $centralId = null)
     {
         $setting = app('setting');
-    
+        if (is_array($key) && !isset($centralId) && isset($default)) {                   
+            $centralId = $default;                                
+            $default = null;
+        }
         if (isset($centralId) && $centralId != $setting->centralId) {
             $setting->centralId = $centralId;
             try {
